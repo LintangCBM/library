@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Book;
+use App\Models\Category;
 
 class BookController extends Controller
 {
@@ -21,7 +22,8 @@ class BookController extends Controller
      */
     public function create()
     {
-        return view('books.create');
+        $categories = Category::all();
+        return view('books.create', compact('categories'));
     }
 
     /**
@@ -53,7 +55,8 @@ class BookController extends Controller
      */
     public function edit(Book $book)
     {
-        return view('books.edit', compact('book'));
+        $categories = Category::all();
+        return view('books.edit', compact('book', 'categories'));
     }
 
     /**
@@ -81,4 +84,39 @@ class BookController extends Controller
 
         return redirect()->route('books.index');
     }
+
+    public function search(Request $request)
+    {
+        $query = $request->input('query');
+        $books = Book::where('title', 'like', "%$query%")
+            ->orWhere('author', 'like', "%$query%")
+            ->get();
+
+        return view('books.index', compact('books'));
+    }
+
+
+    public function authors()
+    {
+        $authors = Book::select('author')->distinct()->get();
+
+        return view('books.authors', compact('authors'));
+    }
+
+    public function borrow(Book $book)
+    {
+        $book->is_borrowed = true;
+        $book->save();
+
+        return redirect()->route('books.index')->with('success', 'Book borrowed successfully!');
+    }
+
+    public function return(Book $book)
+    {
+        $book->is_borrowed = false;
+        $book->save();
+
+        return redirect()->route('books.index')->with('success', 'Book returned successfully!');
+    }
 }
+

@@ -29,6 +29,18 @@
                 <input type="text" class="form-control" id="isbn" name="isbn" value="{{ $book->isbn }}"
                     required>
             </div>
+            <div class="form-group">
+                <label for="category_id">Category</label>
+                <select class="form-control" id="category_id" name="category_id">
+                    <option value="">Select Category</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}"
+                            {{ (old('category_id') ?? ($book->category_id ?? '')) == $category->id ? 'selected' : '' }}>
+                            {{ $category->name }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
             <button type="submit" class="btn btn-primary">Update Book</button>
         </form>
     </div>
