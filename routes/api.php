@@ -8,4 +8,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/books/{book}', [BookController::class, 'show']);
     Route::put('/books/{book}', [BookController::class, 'update']);
     Route::delete('/books/{book}', [BookController::class, 'destroy']);
+    Route::get('/books/isbn/{isbn}', 'Api\BookController@showByIsbn');
+
 });

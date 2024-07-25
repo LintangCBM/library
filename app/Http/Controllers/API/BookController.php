@@ -13,7 +13,8 @@ class BookController extends Controller
      */
     public function index()
     {
-        return Book::all();
+        // return Book::all();
+        return response()->json(Book::all());
     }
 
     /**
@@ -64,5 +65,16 @@ class BookController extends Controller
         $book->delete();
 
         return response()->json(null, 204);
+    }
+
+    public function showByIsbn($isbn)
+    {
+        $book = Book::where('isbn', $isbn)->first();
+
+        if (!$book) {
+            return response()->json(['error' => 'Book not found'], 404);
+        }
+
+        return response()->json($book);
     }
 }
